@@ -411,19 +411,37 @@ class When extends \DateTime
 
                             // get the number of days
                             $totalDays = $dateLooper->format("t");
-                            $today = 0;
+                            $today = 0;$occurences = array();
+                            
+							while ($today < $totalDays) {
+								if ($this->occursOn($dateLooper)) {
+									$occurences = array_merge($occurences, $this->generateTimeOccurences($dateLooper));
+								}
 
-                            while ($today < $totalDays)
-                            {
-                                if ($this->occursOn($dateLooper))
-                                {
-                                    $this->addOccurence($this->generateTimeOccurences($dateLooper));
+								$dateLooper->add(new \DateInterval('P1D'));
+								$today++;
+							}
 
-                                }
+							// if bysetpos is set we need to limit the
+							// number of occurences to only those which
+							// meet the setpos
+							if (isset($this->bysetpos)) {
+								if ($count > 0) {
+									$occurenceCount = count($occurences);
 
-                                $dateLooper->add(new \DateInterval('P1D'));
-                                $today++;
-                            }
+									foreach ($this->bysetpos as $setpos) {
+										if ($setpos > 0) {
+											$this->occurences[] = $occurences[$setpos - 1];
+										}
+										else {
+											$this->occurences[] = $occurences[$occurenceCount + $setpos];
+										}
+									}
+								}
+							}
+							else {
+								$this->addOccurence($occurences);
+							}
                         }
                         else
                         {

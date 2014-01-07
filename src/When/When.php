@@ -411,10 +411,11 @@ class When extends \DateTime
 
                             // get the number of days
                             $totalDays = $dateLooper->format("t");
-                            $today = 0;$occurences = array();
+                            $today = 0;
+                            $occurences = array();
                             
-							while ($today < $totalDays) {
-								if ($this->occursOn($dateLooper)) {
+                            while ($today < $totalDays) {
+                                if ($this->occursOn($dateLooper)) {
 									$occurences = array_merge($occurences, $this->generateTimeOccurences($dateLooper));
 								}
 
